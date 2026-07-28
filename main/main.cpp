@@ -7,6 +7,7 @@
 #include <freertos/FreeRTOS.h>
 #include <wifi.h>
 #include <esp_hosted.h>
+#include <ThinQ.h>
 
 static const char *TAG="MAIN";
 extern objects_t objects;
@@ -84,6 +85,7 @@ void action_select_ssid(lv_event_t *e) {
     lv_textarea_set_text(objects.ssid_text_area, val);
 }
 
+ThinQ thinq;
 
 extern "C" void app_main(void) {
     //esp_log_level_set("*", ESP_LOG_NONE);
@@ -94,9 +96,13 @@ extern "C" void app_main(void) {
     bsp_display_brightness_set(100);
     bsp_display_lock(-1);
     ui_init();
+    thinq.parseSettingsFile();
     bsp_display_unlock();
     wifiSetupConnection("RN11S", "amiga4000", NULL);
     wifiInit(wifiEventGroup);
+
+
+
     while (1)   {
         handleMainEvents(0);
         handleWifiEvents(0);

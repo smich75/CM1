@@ -1354,7 +1354,9 @@
                                 "definition": {
                                   "MAIN": {
                                     "DEFAULT": {
-                                      "text_font": "Coolvetica-18"
+                                      "text_font": "Coolvetica-18",
+                                      "layout": "FLEX",
+                                      "flex_track_place": "CENTER"
                                     }
                                   }
                                 }
@@ -1523,7 +1525,9 @@
                                 "definition": {
                                   "MAIN": {
                                     "DEFAULT": {
-                                      "text_font": "Coolvetica-18"
+                                      "text_font": "Coolvetica-18",
+                                      "layout": "FLEX",
+                                      "flex_track_place": "CENTER"
                                     }
                                   }
                                 }
@@ -1656,7 +1660,7 @@
                               "eventHandlers": [
                                 {
                                   "objID": "1d25aed1-a1db-47cc-f865-dba6e41801d5",
-                                  "eventName": "CLICKED",
+                                  "eventName": "VALUE_CHANGED",
                                   "handlerType": "action",
                                   "action": "selectSSID",
                                   "userData": 0
