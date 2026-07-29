@@ -48,9 +48,9 @@ void handleWifiEvents(uint32_t timeout) {
     if (wifiBits&WIFI_FAIL_BIT) {
     }
     if (wifiBits&WIFI_SCAN_DONE)    {
-        ESP_LOGI(TAG, "Scan done");
+        //ESP_LOGI(TAG, "Scan done");
         lv_obj_clear_state(objects.scan, LV_STATE_DISABLED);
-        ESP_LOGI(TAG, "Creating scan list");
+        //ESP_LOGI(TAG, "Creating scan list");
         uint16_t apNum=wifiGetAPNum();
         int32_t row=0;
         uint16_t width=lv_obj_get_width(objects.sta_scan_list);
@@ -60,7 +60,7 @@ void handleWifiEvents(uint32_t timeout) {
         //lv_table_set_col_width(objects.sta_scan_list, 1, 48);
         while (apNum>0) {
             char *ssid=(char *)wifiGetAPRecord()->ssid;
-            ESP_LOGI(TAG, "Found AP: %s", ssid);
+            //ESP_LOGI(TAG, "Found AP: %s", ssid);
             lv_table_set_cell_value(objects.sta_scan_list, row, 0, ssid);
             row++;
             apNum--;
@@ -69,10 +69,9 @@ void handleWifiEvents(uint32_t timeout) {
 }
 
 void uiRefresh()    {
-    if (bsp_display_lock(0)) {
-        ui_tick();
-        bsp_display_unlock();
-    }
+    bsp_display_lock(0);
+    ui_tick();
+    bsp_display_unlock();
 }
 
 void action_select_ssid(lv_event_t *e) {
