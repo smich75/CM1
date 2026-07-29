@@ -1,8 +1,9 @@
 #include "ThinQ.h"
 #include <cstring>
 #include <cstdio>
+#include <tokenizer.h>
 
-static char thinqSettings[]="PAT=;ClientID=;";
+static char thinqSettings[]="PAT=;ClientID=;Endpoint=TestEndPoint;";
 char *dup;
 
 static const char *endpoints[]={
@@ -15,8 +16,7 @@ ThinQ::ThinQ()  {
 
 }
 
-ThinQ::~ThinQ()
-{
+ThinQ::~ThinQ() {
 
 }
 
@@ -25,13 +25,11 @@ const char *ThinQ::getEndpoint(int32_t epNum)   {
 }
 
 void ThinQ::parseSettingsFile() {
-    dup=strdup(thinqSettings);
-    char *token=strsep((char **)&dup, "=");
-    while (token) {
-        printf("Token: %s\n", token);
-        token=strsep((char **)&dup, ";");
-        //if (token==NULL)    printf("Empty value\n");
-            /*else*/ printf("Val: %s\n", token);
-        token=strsep((char **)&dup, "=");
+    char *key;
+    char *val;
+    char *str=thinqSettings;
+    while (getPair(str, &key, &val))  {
+        str=NULL;
+        printf("Key: %s - Val: %s\n", key, val);
     }
 }
