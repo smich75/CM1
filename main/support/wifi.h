@@ -7,6 +7,7 @@ extern "C"  {
 #include <freertos/FreeRTOS.h>
 #include <freertos/event_groups.h>
 #include <esp_wifi.h>
+#include <cJSON.h>
 
 #define MAXIMUM_RETRY 3
 

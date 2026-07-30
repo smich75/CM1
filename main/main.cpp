@@ -7,7 +7,12 @@
 #include <freertos/FreeRTOS.h>
 #include <wifi.h>
 #include <esp_hosted.h>
-#include <ThinQ.h>
+#include <thinq.h>
+#include <utils.h>
+#include <object.h>
+#include <esp_littlefs.h>
+#include <cJSON.h>
+
 
 static const char *TAG="MAIN";
 extern objects_t objects;
@@ -86,21 +91,61 @@ void action_select_ssid(lv_event_t *e) {
 
 ThinQ thinq;
 
+esp_vfs_littlefs_conf_t littleFSConf={
+    .base_path="/littlefs",
+    .partition_label="storage",
+    .format_if_mount_failed=1,  
+    .dont_mount = false,
+};
+
+char *jsonTxt;
+cJSON *jsonObj;
+cJSON *item;
+
+static void* cjson_spiram_malloc(size_t size) {
+    return heap_caps_malloc(size, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
+}
+
+static void cjson_spiram_free(void* ptr) {
+    heap_caps_free(ptr);
+}
+
+cJSON_Hooks hooks = {
+    .malloc_fn = cjson_spiram_malloc,
+    .free_fn = cjson_spiram_free
+};
+
 extern "C" void app_main(void) {
     //esp_log_level_set("*", ESP_LOG_NONE);
+    
+   //cJSON_InitHooks(&hooks);
     mainEventGroup=xEventGroupCreate();
     wifiEventGroup=xEventGroupCreate();
-    bsp_spiffs_mount();
+    esp_vfs_littlefs_register(&littleFSConf);
     bsp_display_start_with_config(&cfg);
     bsp_display_brightness_set(100);
-    bsp_display_lock(-1);
+    bsp_display_lock(0);
     ui_init();
     thinq.parseSettingsFile();
     bsp_display_unlock();
-    wifiSetupConnection("RN11S", "amiga4000", NULL);
-    wifiInit(wifiEventGroup);
-
-
+    jsonTxt=loadJSON((char *)"/littlefs/wifi.json");
+    char *ssid=NULL, *pwd=NULL;
+    if (jsonTxt)    {
+        printf("Current available ram: %d bytes\n", heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
+        printf("Internal heap: %d bytes\n", heap_caps_get_free_size(MALLOC_CAP_INTERNAL));
+        jsonObj=cJSON_Parse(jsonTxt);
+        printf("Available ram after json parse: %d bytes\n", heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
+        printf("Internal heap: %d bytes\n", heap_caps_get_free_size(MALLOC_CAP_INTERNAL));
+        item=cJSON_GetObjectItem(jsonObj, "ssid");
+        ssid=cJSON_GetStringValue(item);
+        item=cJSON_GetObjectItem(jsonObj, "password");
+        pwd=cJSON_GetStringValue(item);
+        printf("Connecting to %s with password=%s\n", ssid, pwd);
+        wifiSetupConnection(ssid, pwd, NULL);
+        wifiInit(wifiEventGroup);
+        cJSON_Delete(jsonObj);
+        free(jsonTxt);
+    }
 
     while (1)   {
         handleMainEvents(0);

@@ -7,6 +7,7 @@
 #include <esp_wifi_remote.h>
 #include <nvs_flash.h>
 #include <esp_log.h>
+#include <esp_http_client.h>
 
 static const char *TAG="WIFI";
 static EventGroupHandle_t mainEventGroup;
@@ -44,14 +45,8 @@ static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_
         switch (event_id)   {
 
         case WIFI_EVENT_SCAN_DONE:
-            ESP_LOGI(TAG, "Wifi scan done");
+            //ESP_LOGI(TAG, "Wifi scan done");
             xEventGroupSetBits(wifiEventGroup, WIFI_SCAN_DONE);
-            /*esp_wifi_scan_get_ap_num(&apNum);
-            while (apNum>0) {
-                esp_wifi_scan_get_ap_record(&record);
-                ESP_LOGI(TAG, "AP: %s, power:%d", record.ssid, record.rssi);
-                apNum--;
-            }*/
             break;
 
         case WIFI_EVENT_STA_START:

@@ -18,4 +18,6 @@ dependencies:
   waveshare/esp32_p4_wifi6_touch_lcd_7b: ^2.0.0
   espressif/esp_wifi_remote: ^1.6.1
   lvgl/lvgl: ^8.4
-  
+
+  espressif/cjson: ^1.7.19~2
+  joltwallet/littlefs: ^1.0.0

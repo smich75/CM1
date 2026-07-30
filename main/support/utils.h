@@ -4,9 +4,9 @@ extern "C"  {
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdio.h>
 
-char *tok(char *string, char del);
-bool getPair(char *string, char **key, char **val);
+char *loadJSON(char *filename);
 
 #ifdef __cplusplus
 }

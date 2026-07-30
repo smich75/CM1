@@ -1,7 +1,7 @@
-#include "ThinQ.h"
+#include "thinq.h"
 #include <cstring>
 #include <cstdio>
-#include <tokenizer.h>
+#include <esp_http_server.h>
 
 static char thinqSettings[]="PAT=;ClientID=;Endpoint=TestEndPoint;";
 char *dup;
@@ -25,11 +25,4 @@ const char *ThinQ::getEndpoint(int32_t epNum)   {
 }
 
 void ThinQ::parseSettingsFile() {
-    char *key;
-    char *val;
-    char *str=thinqSettings;
-    while (getPair(str, &key, &val))  {
-        str=NULL;
-        printf("Key: %s - Val: %s\n", key, val);
-    }
 }
