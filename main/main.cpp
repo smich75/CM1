@@ -140,7 +140,6 @@ extern "C" void app_main(void) {
         ssid=cJSON_GetStringValue(item);
         item=cJSON_GetObjectItem(jsonObj, "password");
         pwd=cJSON_GetStringValue(item);
-        printf("Connecting to %s with password=%s\n", ssid, pwd);
         wifiSetupConnection(ssid, pwd, NULL);
         wifiInit(wifiEventGroup);
         cJSON_Delete(jsonObj);
