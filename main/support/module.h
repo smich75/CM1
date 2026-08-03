@@ -3,11 +3,12 @@
 
 #pragma once
 
-class module
+class Module
 {
 public:
-    module();
-    ~module();
+    Module();
+    ~Module();
+
 private:
 
 };

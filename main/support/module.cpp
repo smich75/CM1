@@ -1,11 +1,9 @@
 #include "module.h"
+#include <cJSON.h>
 
-module::module()
-{
 
+Module::Module()    {
 }
 
-module::~module()
-{
-
+Module::~Module()   {
 }
