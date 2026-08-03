@@ -3,14 +3,23 @@
 
 #pragma once
 
-class Module
-{
+#include <cstdint>
+#include <cstdio>
+#include <wifi.h>
+#include <freertos/FreeRTOS.h>
+
+class Module    {
 public:
     Module();
     ~Module();
+    void bsp_initialize();
+    int32_t load_settings(char *filename);
+    int32_t save_settings(char *filename);
+
+    Wifi    *wifi;
 
 private:
-
+    TaskHandle_t    handle;
 };
 
 #endif
