@@ -15,8 +15,8 @@ public:
     Module();
     ~Module();
     void bsp_initialize();
-    int32_t load_settings();
-    int32_t save_settings();
+    int32_t load_config();
+    int32_t save_config();
 
     Wifi    *wifi;
 

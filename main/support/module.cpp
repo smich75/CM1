@@ -26,8 +26,8 @@ static esp_vfs_littlefs_conf_t little_fs_conf={
 Module::Module()    {
     handle=xTaskGetCurrentTaskHandle();
     bsp_initialize();
-    load_settings();
-    save_settings();
+    load_config();
+    save_config();
 
     wifi=new Wifi;
 }
@@ -41,7 +41,7 @@ void Module::bsp_initialize()   {
     bsp_display_brightness_set(100);
 }
 
-int32_t Module::load_settings()
+int32_t Module::load_config()
 {
     FILE *f=NULL;
     int32_t bufferSize;
@@ -68,7 +68,7 @@ int32_t Module::load_settings()
     return ret_val;
 }
 
-int32_t Module::save_settings() {
+int32_t Module::save_config() {
     cJSON   *tmp;
     FILE    *f;
     int32_t ret_val=0;

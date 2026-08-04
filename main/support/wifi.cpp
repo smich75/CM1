@@ -43,32 +43,29 @@ void ip_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, 
     }
 }
 
-void wifiTask(void *pvParameters)   {
-    Wifi    *wifi=(Wifi *)pvParameters;
-    wifi->disconnect_retry_cnt=0;
-    wifi->flags=0;
+void Wifi::setup()   {
+    disconnect_retry_cnt=0;
+    flags=0;
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
-    wifi->events=xEventGroupCreate();
+    events=xEventGroupCreate();
     esp_netif_init();
     esp_event_loop_create_default();
     esp_netif_create_default_wifi_sta();
     wifi_init_config_t init_cfg=WIFI_INIT_CONFIG_DEFAULT();
     esp_wifi_init(&init_cfg);
-    esp_event_handler_instance_register(WIFI_EVENT, ESP_EVENT_ANY_ID, wifi_event_handler, (void *)wifi, &wifi->wifi_id);
-    esp_event_handler_instance_register(IP_EVENT, IP_EVENT_STA_GOT_IP, ip_event_handler, (void *)wifi, &wifi->ip_id);
+    esp_event_handler_instance_register(WIFI_EVENT, ESP_EVENT_ANY_ID, wifi_event_handler, (void *)this, &wifi_id);
+    esp_event_handler_instance_register(IP_EVENT, IP_EVENT_STA_GOT_IP, ip_event_handler, (void *)this, &ip_id);
     esp_wifi_set_mode(WIFI_MODE_STA);
+    load_config();
     esp_wifi_start();
-    while (1)   {
-        EventBits_t bits=xEventGroupWaitBits(wifi->events, 0x00ffffff, pdTRUE, pdFALSE, portMAX_DELAY);
-    }
 }
 
 Wifi::Wifi()    {
-    xTaskCreate(wifiTask, "WIFI_TASK", 4096, this, 4, &handle);
+    setup();
 }
 
 Wifi::~Wifi()   {
@@ -86,11 +83,20 @@ void Wifi::connect()    {
     esp_wifi_connect();
 }
 
-int32_t Wifi::load_settings()   {
+int32_t Wifi::load_config()   {
+    config=Utils::get()->load_file("/littlefs/wifi.json");
+    if (config) {
+        cJSON *ssid=cJSON_GetObjectItem(config, "ssid");
+        cJSON *password=cJSON_GetObjectItem(config, "password");
+        if (ssid&&password) {
+            set_ap(cJSON_GetStringValue(ssid), cJSON_GetStringValue(password));
+            return 1;
+        }
+    }
     return 0;
 }
 
-int32_t Wifi::save_settings()   {
+int32_t Wifi::save_config()   {
     return 0;
 }
 
