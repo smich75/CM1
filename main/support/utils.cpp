@@ -2,7 +2,7 @@
 
 Utils   *Utils::ptr=NULL;
 
-cJSON *Utils::load_file(char * filename)    {
+cJSON *Utils::load_config_file(char * filename)    {
     void *buffer=NULL;
     cJSON *tmp=NULL;
     FILE *f;
@@ -21,4 +21,16 @@ cJSON *Utils::load_file(char * filename)    {
         fclose(f);
     }
     return tmp;
+}
+
+bool Utils::save_config_file(cJSON * data, char *filename)  {
+    FILE *f=NULL;
+    f=fopen(filename, "w+");
+    if (f)  {
+        char *buffer=cJSON_Print(data);
+        fputs(buffer, f);
+        fclose(f);
+        return true;
+    }
+    return false;
 }

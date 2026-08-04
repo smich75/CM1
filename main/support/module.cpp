@@ -27,9 +27,9 @@ Module::Module()    {
     handle=xTaskGetCurrentTaskHandle();
     bsp_initialize();
     load_config();
-    save_config();
-
     wifi=new Wifi;
+    //vTaskDelay(5000);
+    ws_server=new WebSocketServer;
 }
 
 Module::~Module()   {

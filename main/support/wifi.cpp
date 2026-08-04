@@ -1,7 +1,7 @@
 #include "wifi.h"
 
 static const char *TAG="WIFI.CPP";
-static const char settings_file[]="/littlefs/wifi.json";
+static const char config_file[]="/littlefs/wifi.json";
 
 void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
     Wifi *wifi=(Wifi *)arg;
@@ -44,8 +44,6 @@ void ip_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, 
 }
 
 void Wifi::setup()   {
-    disconnect_retry_cnt=0;
-    flags=0;
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
@@ -84,7 +82,10 @@ void Wifi::connect()    {
 }
 
 int32_t Wifi::load_config()   {
-    config=Utils::get()->load_file("/littlefs/wifi.json");
+    if (config) {
+        cJSON_Delete(config);
+    }
+    config=Utils::get()->load_config_file((char *)config_file);
     if (config) {
         cJSON *ssid=cJSON_GetObjectItem(config, "ssid");
         cJSON *password=cJSON_GetObjectItem(config, "password");

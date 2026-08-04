@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <wifi.h>
+#include <websocketserver.h>
 #include <object.h>
 #include <freertos/FreeRTOS.h>
 #include <cJSON.h>
@@ -19,6 +20,7 @@ public:
     int32_t save_config();
 
     Wifi    *wifi;
+    WebSocketServer *ws_server;
 
     cJSON   *settings=NULL;
     int32_t display_brightness=100;

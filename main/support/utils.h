@@ -10,8 +10,8 @@
 
 class Utils {
 public:
-    cJSON *load_file(char *filename);
-    bool save_file(cJSON *data);
+    cJSON *load_config_file(char *filename);
+    bool save_config_file(cJSON *data, char *filename);
 
     static Utils *get() {
         if (!ptr)   {

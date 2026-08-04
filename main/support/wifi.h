@@ -33,10 +33,10 @@ public:
     int32_t load_config();
     int32_t save_config();
 
-    uint8_t disconnection_reason;
-    int32_t disconnect_retry_cnt;
+    uint8_t disconnection_reason=0;
+    int32_t disconnect_retry_cnt=0;
 
-    cJSON           *config;
+    cJSON           *config=NULL;
     TaskHandle_t    handle;
     EventGroupHandle_t  events;
     esp_event_handler_instance_t wifi_id;
