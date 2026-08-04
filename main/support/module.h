@@ -6,10 +6,11 @@
 #include <cstdint>
 #include <cstdio>
 #include <wifi.h>
+#include <object.h>
 #include <freertos/FreeRTOS.h>
 #include <cJSON.h>
 
-class Module    {
+class Module: public Object  {
 public:
     Module();
     ~Module();

@@ -11,15 +11,17 @@
 #include <esp_log.h>
 #include <esp_event.h>
 #include <nvs_flash.h>
+#include <object.h>
 
 //                              FLAGS
 #define WIFI_FLG_STA_READY  BIT0
-#define WIFI_FLG_VALID  BIT1
+#define WIFI_FLG_VALID      BIT1
+#define WIFI_FLG_CONNECTED  BIT2
 
 //                              EVENT GROUP BITS
 #define WIFI_TEST_BIT   BIT0
 
-class Wifi  {
+class Wifi : public Object {
 public:
     Wifi();
     ~Wifi();
@@ -30,7 +32,7 @@ public:
     int32_t load_settings();
     int32_t save_settings();
 
-    int32_t flags;
+    uint8_t disconnection_reason;
     int32_t disconnect_retry_cnt;
 
     TaskHandle_t    handle;

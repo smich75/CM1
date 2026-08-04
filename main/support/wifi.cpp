@@ -7,15 +7,22 @@ void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id
     Wifi *wifi=(Wifi *)arg;
     switch (event_id)   {
         case WIFI_EVENT_STA_START:
-            wifi->flags|=WIFI_FLG_STA_READY;
-            if (wifi->flags&WIFI_FLG_VALID) {
+            wifi->add_flags(WIFI_FLG_STA_READY);
+            if (wifi->get_flags()&WIFI_FLG_VALID) {
                 esp_wifi_connect();
             }
         break;
         case WIFI_EVENT_STA_CONNECTED:
         break;
         case WIFI_EVENT_STA_DISCONNECTED:
-            if (wifi->flags&WIFI_FLG_VALID) {
+            wifi->disconnection_reason=((wifi_event_sta_disconnected_t *)event_data)->reason;
+            ESP_LOGI(TAG, "Disconnection reason: %d", wifi->disconnection_reason);
+            if (wifi->disconnection_reason==WIFI_REASON_AUTH_FAIL)  {
+                wifi->clear_flags(WIFI_FLG_VALID|WIFI_FLG_CONNECTED);
+            }   else    {
+                wifi->clear_flags(WIFI_FLG_CONNECTED);
+            }
+            if (wifi->get_flags()&WIFI_FLG_VALID) {
                 esp_wifi_connect();
             }
         break;
@@ -25,9 +32,11 @@ void wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id
 }
 
 void ip_event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data) {
+    Wifi *wifi=(Wifi *)arg;
     switch (event_id)   {
         case IP_EVENT_STA_GOT_IP:
             ESP_LOGI(TAG, "Wifi connected");
+            wifi->add_flags(WIFI_FLG_CONNECTED);
         break;
         default:
         break;
