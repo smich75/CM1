@@ -12,10 +12,10 @@ cJSON *Utils::load_config_file(char * filename)    {
         fseek(f, 0, SEEK_END);
         buffer_size=ftell(f);
         fseek(f, 0, SEEK_SET);
-        buffer=malloc(buffer_size);
+        buffer=calloc(1, buffer_size+1);
         if (buffer) {
             fread(buffer, buffer_size, 1, f);
-            tmp=cJSON_ParseWithLength((char *)buffer, buffer_size);
+            tmp=cJSON_Parse((char *)buffer);
             free(buffer);
         }
         fclose(f);

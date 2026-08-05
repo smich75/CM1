@@ -28,7 +28,6 @@ Module::Module()    {
     bsp_initialize();
     load_config();
     wifi=new Wifi;
-    //vTaskDelay(5000);
     ws_server=new WebSocketServer;
 }
 

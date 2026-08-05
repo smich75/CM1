@@ -53,7 +53,6 @@ static esp_err_t ws_handler(httpd_req_t *req)   {
     return ret;
 }
 
-
 static const httpd_uri_t ws = {
         .uri        = "/ws",
         .method     = HTTP_GET,
